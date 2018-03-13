@@ -1,10 +1,11 @@
 package projetsportif.v1;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class ListSportif {
 	
-	ArrayList<Sportif> sportifs;
+	private ArrayList<Sportif> sportifs;
 	
 	public ListSportif()
 	{
@@ -17,12 +18,12 @@ public class ListSportif {
 		{
 			if(sportifs.get(i).getPseudo().contentEquals(s.getPseudo()))
 			{
-				System.out.printf("Le pseudo d駛a existant\n");
+				System.out.printf("Le pseudo déja existant\n");
 				return 1;
 			}
 			else if(sportifs.get(i).getCouple().contentEquals(s.getCouple()))
 			{
-				System.out.printf("Personne d駛a pr駸ente dans la BDD avec le pseudo : "+ sportifs.get(i).getPseudo() +" \n");
+				System.out.printf("Personne déja présente dans la BDD avec le pseudo : "+ sportifs.get(i).getPseudo() +" \n");
 				return 2;
 			}
 		}
@@ -42,12 +43,12 @@ public class ListSportif {
 			{
 				if(sportifs.get(i).getPseudo().contentEquals(s.getPseudo()))
 				{
-					System.out.printf("Le pseudo d駛a existant\n");
+					System.out.printf("Le pseudo déja existant\n");
 					return 1;
 				}
 				else if(sportifs.get(i).getCouple().contentEquals(s.getCouple()))
 				{
-					System.out.printf("Personne d駛a pr駸ente dans la BDD avec le pseudo : "+ sportifs.get(i).getPseudo() +" \n");
+					System.out.printf("Personne déja présente dans la BDD avec le pseudo : "+ sportifs.get(i).getPseudo() +" \n");
 					return 2;
 				}
 			}
@@ -67,41 +68,50 @@ public class ListSportif {
 		if(result==0)
 		{
 			sportifs.add(s);	
-			System.out.printf("Sportif ajout� a la bdd : \n"+ s.toString() + "\n");
+			System.out.printf("Sportif ajouté a la bdd : \n"+ s.toString() + "\n");
 		}
 		return result;
 	}
 	
-	public void modifierSportif(String nom, String prenom, String pseudo, String date, String activite)
+	public boolean modifierSportif(String pseudo, String nom, String prenom, String newPseudo, String activite, String date)
 	{
 		for(int i=0;i<sportifs.size();i++)
 		{
 			if(sportifs.get(i).getPseudo().contentEquals(pseudo))
 			{
-				Sportif newSportif = new Sportif(nom, prenom, pseudo, date, activite);
-				int result = testSportif(sportifs.get(i),i);
+				Sportif newSportif = new Sportif(sportifs.get(i).getNom(),sportifs.get(i).getPrenom(),pseudo,sportifs.get(i).getActivite(),sportifs.get(i).getDate());
+				newSportif.modifier(nom, prenom, newPseudo, date, activite);
+				int result = testSportif(newSportif,i);
 				if(result==0)
 				{
-					sportifs.get(i).modifier(nom, prenom, pseudo, date, activite);
-					System.out.printf("Sportif modifi� a la bdd : "+ sportifs.get(i).toString() + "\n");
+					sportifs.get(i).modifier(nom, prenom, newPseudo, date, activite);
+					System.out.printf("Sportif modifié a la bdd : "+ sportifs.get(i).toString() + "\n");
+					return true;
+				}
+				else
+				{
+					return false;
 				}
 				
 			}
 
 		}
 		System.out.printf("Pseudo inexistant\n");
+		return false;
 	}
 	
-	public void supprimerSportif(String p) //sera ensuite dans la classe BDD
+	public boolean supprimerSportif(String p) //sera ensuite dans la classe BDD
 	{
 		for(int i=0;i<sportifs.size();i++)
 		{
 			if(sportifs.get(i).getPseudo().contentEquals(p))
 			{
 				sportifs.remove(sportifs.get(i));
+				return true;
 			}
 		}
 		System.out.printf("Pseudo inexistant\n");
+		return false;
 	}
 	
 	public void afficherSportifs()
@@ -113,9 +123,10 @@ public class ListSportif {
 			System.out.printf(sportifs.get(i).toString());
 		}
 	}
-
-	public ArrayList<Sportif> getSportifs() {
-		return sportifs;
+	
+	public ArrayList<Sportif> getSportifs()
+	{
+		return this.sportifs;
 	}
 
 }

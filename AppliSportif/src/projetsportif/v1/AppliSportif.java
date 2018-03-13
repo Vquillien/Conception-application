@@ -27,8 +27,8 @@ public class AppliSportif {
     	listS.supprimerSportif(p);
     }
 
-    public void modifierSportif(String nom,String prenom,String pseudo,String date,String activite){
-    	listS.modifierSportif(nom, prenom, pseudo, date, activite);
+    public void modifierSportif(String pseudo, String nom,String prenom,String newPseudo,String date,String activite){
+    	listS.modifierSportif(pseudo, nom, prenom, newPseudo, date, activite);
     }
 
     public int ajouterQuestionnaire(String titre, String date_debut, String date_fin){
@@ -60,8 +60,8 @@ public class AppliSportif {
     }
 
     public int ajouterQuestionReponse(int indexS, int indexQ){
-        return listQR.ajouterQestionReponse(listS.getSportifs().get(indexS),
-                listQ.getListQuestionnaire().get(indexQ));
+    	System.out.println(listS.getSportifs().get(indexS).toString());
+        return listQR.ajouterQestionReponse(listS.getSportifs().get(indexS),listQ.getListQuestionnaire().get(indexQ));
     }
     
     public void repondreQuestionReponse(ArrayList<Boolean> listR, int indexQR, String date){

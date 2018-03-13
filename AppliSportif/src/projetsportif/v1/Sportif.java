@@ -3,6 +3,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 
 public class Sportif {
@@ -27,54 +28,36 @@ public class Sportif {
 	
 	public Sportif(String n, String p, String ps, String a, String d)
 	{
-		this.setNom(n);
-		this.setPrenom(p);
-		this.setPseudo(ps);
-		this.setActivite(a);
-		this.setDate(d);
-		if((this.nom!="")&&(this.prenom!="")&&(this.pseudo!="")&&(this.activite!="")&&(this.dateNaissance!=null))
-		{
-			this.complet = true;
-		}
-		else
-		{
-			System.out.printf("Attention formulaire incomplet \n");
-			this.complet = false;
-		}
+		boolean result;
+		this.nom="";
+		this.prenom="";
+		this.pseudo="";
+		this.activite="";
+		this.dateNaissance=null;
+		result = this.setNom(n);
+		result = this.setPrenom(p);
+		result = this.setPseudo(ps);
+		result = this.setActivite(a);
+		result = this.setDate(d);
+		verification();
+	}
+	
+	
+	public void verification()
+	{
+		this.complet = (this.nom!="")&&(this.prenom!="")&&(this.pseudo!="")&&(this.activite!="")&&(this.dateNaissance!=null);
 	}
 	
 	//modifier
 	public void modifier(String nom, String prenom , String pseudo , String date , String activite)
 	{
-		if(nom!="")
-		{
-			this.setNom(nom);
-		}
-		if(prenom!="")
-		{
-			this.setPrenom(prenom);
-		}
-		if(pseudo!="")
-		{
-			this.setPseudo(pseudo);
-		}
-		if(activite!="")
-		{
-			this.setActivite(activite);
-		}
-		if(date!="")
-		{
-			this.setDate(date);	
-		}
-		if((this.nom!="")&&(this.prenom!="")&&(this.pseudo!="")&&(this.activite!="")&&(this.dateNaissance!=null))
-		{
-			this.complet = true;
-		}
-		else
-		{
-			System.out.printf("Incomplet");
-			this.complet = false;
-		}
+		boolean result;
+		result = this.setNom(nom);
+		result = this.setPrenom(prenom);
+		result = this.setPseudo(pseudo);
+		result = this.setActivite(activite);
+		result = this.setDate(date);
+		this.verification();
 	}
 	
 
@@ -82,7 +65,7 @@ public class Sportif {
 	
 	public String toString()
 	{
-		return " Nom : " + this.nom + "\n Pr駭om : " + this.prenom + "\n Pseudo : " + this.pseudo + "\n Date de naissance : " + this.dateNaissance + "\n Activit� sportive : " + this.activite +"\n Formulaire complet :" + this.complet + "\n" ;
+		return " Nom : " + this.nom + "\n Prénom : " + this.prenom + "\n Pseudo : " + this.pseudo + "\n Date de naissance : " + this.dateNaissance + "\n Activité sportive : " + this.activite +"\n Formulaire complet :" + this.complet + "\n" ;
 	}
 	
 	//getter
@@ -102,9 +85,11 @@ public class Sportif {
 		return this.prenom;
 	}
 	
-	public LocalDate getDate()
+	public String getDate()
 	{
-		return this.dateNaissance;
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("uuuu-MM-dd");
+		return this.dateNaissance.format(formatter);
+		
 	}
 	
 	public String getActivite()
@@ -121,47 +106,33 @@ public class Sportif {
 	{
 		return this.complet;
 	}
+	
+	public Sportif getSportif()
+	{
+		return this;
+	}
 	//setter
 	
-	public void setPseudo(String p)
+	public boolean setPseudo(String p)
 	{
 		char chr;
-		int c = 0;
-		boolean test = true;
 		if (p!="") //test si chaine vide / null
 		{
 			for(int i =0;i<p.length();i++)
 			{
-				chr = p.charAt(i); //recup鑽e le caract鑽e
-		        if ( Character.isLetter(chr)) //test si caract鑽e 
+				chr = p.charAt(i); //recupère le caractère
+		        if ( Character.isLetter(chr)) //test si caractère 
 				{
-					c++;
+					this.pseudo=p;
+					return true;
 				}
 			}
-			if(c==0) // si pas de lettre saisie invalide
-			{
-				System.out.printf("Le pseudo doit contenir au moins une lettre, veuillez saisir le pseudo du sportif \n");
-				test = false;
-			}
 		}
-		else
-		{
-			System.out.printf("Saisie vide \n");
-			test = false;
-		}
+		return false;
 		
-		if(test)
-		{
-			this.pseudo=p;
-			this.pseudo = this.pseudo.toLowerCase();
-		}
-		else
-		{
-			this.pseudo="";
-		}
 	}
 	
-	public void setNom(String n)
+	public boolean setNom(String n)
 	{
 		char chr;
 		boolean test = true;
@@ -169,10 +140,10 @@ public class Sportif {
 		{
 			for(int i =0;i<n.length();i++)
 			{
-				chr = n.charAt(i); //recup鑽e le caract鑽e
-		        if ( !Character.isLetter(chr)) //test si caract鑽e valide
+				chr = n.charAt(i); //recupère le caractère
+		        if ( !Character.isLetter(chr)) //test si caractère valide
 				{
-					System.out.printf("Caract鑽e invalide \n");
+					System.out.printf("Caractère invalide \n");
 					test=false;
 				}
 			}
@@ -187,28 +158,29 @@ public class Sportif {
 		{
 			this.nom=n;
 			//mettre en forme nom 
-			this.nom = this.nom.substring(0,1).toUpperCase() + this.nom.substring(1,nom.length()).toLowerCase(); //Premi鑽e lettre en maj puis minuscule
+			this.nom = this.nom.substring(0,1).toUpperCase() + this.nom.substring(1,nom.length()).toLowerCase(); //Première lettre en maj puis minuscule
+			return true;
 
 		}
 		else
 		{
-			this.nom="";
+			return false;
 		}
 		
 	}
 	
-	public void setPrenom(String p)
+	public boolean setPrenom(String p)
 	{
 		char chr;
 		boolean test = true;
 		if (p!="") 
 		{
-			for(int i =0;i<this.nom.length();i++)
+			for(int i =0;i<p.length();i++)
 			{
-				chr = p.charAt(i); //recup鑽e le caract鑽e
-		        if ( !Character.isLetter(chr)) //test si caract鑽e valide
+				chr = p.charAt(i); //recupère le caractère
+		        if ( !Character.isLetter(chr)) //test si caractère valide
 				{
-					System.out.printf("Caract鑽e invalide \n");
+					System.out.printf("Caractère invalide \n");
 					test=false;
 				}
 			}
@@ -223,45 +195,42 @@ public class Sportif {
 		{
 			this.prenom=p;
 			//mettre en forme nom 
-			this.prenom = this.prenom.substring(0,1).toUpperCase() + this.prenom.substring(1,prenom.length()).toLowerCase(); //Premi鑽e lettre en maj puis minuscule
-
+			this.prenom = this.prenom.substring(0,1).toUpperCase() + this.prenom.substring(1,prenom.length()).toLowerCase(); //Première lettre en maj puis minuscule
+			return true;
 		}
 		else {
-			this.prenom="";
+			return false;
 		}
 	}
 	
-	public void setDate(String d)
+	public boolean setDate(String d)
 	{
 		//DateTimeFormatter fmt = DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM);
 		boolean continu = isDateValid(d);
 		if(continu)
 		{
 			this.dateNaissance = LocalDate.parse(d);
+			return true;
 		}
 		else
 		{
 			System.out.printf("format date incorrect");
-			this.dateNaissance=null;
+			return false;
 		}
 	}
 	
-	public void setActivite(String a)
+	public boolean setActivite(String a)
 	{
 		a = a.substring(0,1).toUpperCase() + a.substring(1,a.length()).toLowerCase();
-		boolean parcours = false;
 		for(Activites activite : Activites.values()){
-			if(activite.toString() == a)
+			System.out.println(activite.toString());
+			if(activite.toString().compareTo(a)==0)
 			{
 				this.activite=a;
-				parcours = true;
+				return true;
 			}	    	
 	    }
-		if(!parcours)
-		{
-			this.activite="";
-			System.out.printf("Activit� : "+ a + " pas présent dans la liste");
-		}
+		return false;
 	}
 
 }
